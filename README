@@ -1,6 +1,40 @@
 Ian Loo (iloo)
 
+DESCRIPTION: 
+  Program for a simple shell that can take commands from stdin or a file that 
+  is specified from the command line. Supports redirection, quoted strings, 
+  backslash escapes, cd, mkdir, signal interrupts, pipes. 
+  Functions and structures not defined: 
+    
+    char *readLongString(FILE *infile)
+      reads an arbitrarily long string from the given FILE * up until it encounters
+      a newline or EOF, removing the terminating newline, if any. On success,
+      returns a pointer to the string in a newly-malloc()ed buffer. On error or
+      EOF, returns NULL. The caller is responsible for freeing the allocated string.
+    
+    pipeline crack_pipeline(char *line)
+      Take the given string and parse it into a pipeline. On success returns a
+      pointer to the new pipeline. The pipeline retains a pointer to line, but
+      free pipeline() does not free it. On error, returns NULL.
+    
+    void free_pipeline(pipeline c1)
+      Frees the given command line, all its stages, and all associated strings.
+    
+    typedef struct clstage *clstage;
+    struct clstage {
+      char *inname; /* input filename (or NULL for stdin) */
+      char *outname; /* output filename (NULL for stdout) */
+      int argc; /* argc and argv for the child */
+      char **argv; /* Array for argv */
+      clstage next; /* link pointer only meaningful in the parser */
+    };
+    typedef struct pipeline {
+      char *cline; /* the original command line */
+      int length; /* length of the pipeline */
+      struct clstage *stage; /* descriptors for the stages */
+    } *pipeline;
+
+
 NOTES: 
-  Everything works except for the signal handling which only runs right after 
-  a bad execution. Other than that it will always block the SIGINT in the parent. 
+  Everything works except for the signal handling which always blocks in parent. 
 
