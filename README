@@ -1,0 +1,6 @@
+Ian Loo (iloo)
+
+NOTES: 
+  Everything works except for the signal handling which only runs right after 
+  a bad execution. Other than that it will always block the SIGINT in the parent. 
+
